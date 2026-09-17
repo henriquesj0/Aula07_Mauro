@@ -1,62 +1,56 @@
 import 'package:flutter/material.dart';
-import 'imagem_controle.dart';
+import 'tabuada_controle.dart';
 
 class Principal extends StatefulWidget {
+  const Principal({super.key});
+
   @override
   State<Principal> createState() => _PrincipalState();
 }
 
 class _PrincipalState extends State<Principal> {
-  final controle = ImagemControle();
+  final controle = TabuadaControle();
+  final controlaTexto = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    bool correto = controle.verificaResposta(controlaTexto.text);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Galeria Wikipedia'),
+        title: const Text('Tabuada'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              controle.imagemAtual.url,
-              width: 200,
-              height: 200,
-              headers: const {'User-Agent': 'MinhaAppFlutter/1.0'},
-              errorBuilder: (context, error, stackTrace) {
-                return const SizedBox(
-                  width: 200,
-                  height: 200,
-                  child: Center(
-                    child:
-                        Text('Erro ao carregar', textAlign: TextAlign.center),
-                  ),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                controle.imagemAtual.like
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: controle.imagemAtual.like ? Colors.red : null,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${controle.tabuada.numero1} x ${controle.tabuada.numero2} = ?',
+                style: const TextStyle(
+                  fontSize: 28,
+                ),
               ),
-              onPressed: () {
-                setState(() {
-                  controle.imagemAtual.like = !controle.imagemAtual.like;
-                });
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  controle.proximaImagem();
-                });
-              },
-              child: const Text('Próxima Imagem'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              TextField(
+                controller: controlaTexto,
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  setState(() {});
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Digite a resposta',
+                ),
+              ),
+              const SizedBox(height: 20),
+              Icon(
+                correto ? Icons.check : Icons.close,
+                size: 50,
+              ),
+            ],
+          ),
         ),
       ),
     );
